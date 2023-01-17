@@ -18,8 +18,9 @@ jobs:
       matrix:
         # Working: coldcard, lnd, bitcoin-core, mycelium-android, zap-android, simple-bitcoin-wallet, wasabi, sparrow, blockstream-green
         # WIP: trezor-firmware, bitbox02-firmware
-        project: [coldcard, coldcard-mk3, lnd, bitcoin-core, mycelium-android, zap-android, simple-bitcoin-wallet, wasabi, sparrow, blockstream-green, fulcrum,
-		electrs, cln, poncho, nostril]
+        project: [ coldcard ]
+        # project: [coldcard, coldcard-mk3, lnd, bitcoin-core, mycelium-android, zap-android, simple-bitcoin-wallet, wasabi, sparrow, blockstream-green, fulcrum,
+        # electrs, cln, poncho, nostril]
     steps:
       - name: Setup xvfb for video capture
         run: |
@@ -265,11 +266,11 @@ jobs:
       - name: Tweet about new builds
         working-directory: twitter_bot
         run: |
-          pushd ../nostril && ./steps.sh && popd
-          # $NOSTR_POSTER=$(which nostril)
-          ${NOSTR_POSTER}=../nostril/nostril
-          echo -e ${NOSTR_POSTER}
-          ${NOSTR_POSTER} --sec ${{ secrets.NOSTR_KEY }} 2>/dev/null
+          # printenv
+          pushd $GITHUB_WORKSPACE/nostril && ./steps.sh && popd
+          NOSTR_POSTER=$GITHUB_WORKSPACE/nostril/nostril/nostril
+          echo $NOSTR_POSTER
+          $NOSTR_POSTER --sec ${{ secrets.NOSTR_KEY }} --envelope --content "test"
           PATTERN="../artifacts/*/*tweet-entry.txt"
 
           if ls $PATTERN 1> /dev/null 2>&1; then
