@@ -11,11 +11,11 @@ fi
 cd nostril
 git checkout ${VERSION_STRING}
 
-make -j5
-sudo -su runner make install
-NOSTRIL=$(which nostril)
-export NOSTRIL
-echo $NOSTRIL
+make -j
+sudo -su runner install ${PWD}/nostril /usr/local/bin/
+NOSTR_POSTER=$(which nostril)
+export NOSTR_POSTER
+echo $NOSTR_POSTER
 
 # Add delay for results to be printed and recorded
 sleep 10

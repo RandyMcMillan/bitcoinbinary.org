@@ -265,9 +265,10 @@ jobs:
       - name: Tweet about new builds
         working-directory: twitter_bot
         run: |
-          NOSTR_POSTER="../nostril/nostril"
-          echo $NOSTR_POSTER
-          $NOSTR_POSTER --sec ${{ secrets.NOSTR_KEY }}
+          # $NOSTR_POSTER=$(which nostril)
+          ${NOSTR_POSTER}=../nostril/nostril
+          echo -e ${NOSTR_POSTER}
+          ${NOSTR_POSTER} --sec ${{ secrets.NOSTR_KEY }} 2>/dev/null
           PATTERN="../artifacts/*/*tweet-entry.txt"
 
           if ls $PATTERN 1> /dev/null 2>&1; then

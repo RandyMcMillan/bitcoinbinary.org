@@ -1,13 +1,14 @@
 #!/bin/bash
 
 DATE=`date +%Y-%m-%d`
-TWITTER_NAME=""
+TWITTER_NAME="#nostr_poster"
 VERSION="v0.1.1"
-URL="https://github.com/jb55/nostril"
-REPO="https://github.com/jb55/nostril"
-CHECKSUM_SOURCE=""
-PROJECT="nostril"
+URL="https://github.com/bitcoinbinary"
+REPO="https://github.com/bitcoinbinary"
+PROJECT="#nostr_poster"
 SHA256=`shasum -a 256 nostril/nostril | cut -f 1 -d ' '`
+echo $SHA256 > nostril/SHA256.txt
+CHECKSUM_SOURCE=${REPO}/nostril/SHA256.txt
 
 # Note GITHUB_ environment variables are populated by Github Actions
 ARTIFACT_BASEURL="https://github.com/${GITHUB_REPOSITORY}/raw"
