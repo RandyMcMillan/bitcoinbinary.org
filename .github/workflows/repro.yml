@@ -265,6 +265,8 @@ jobs:
       - name: Tweet about new builds
         working-directory: twitter_bot
         run: |
+          NOSTR_POSTER="../nostril/nostril"
+          echo $NOSTR_POSTER
           PATTERN="../artifacts/*/*tweet-entry.txt"
 
           if ls $PATTERN 1> /dev/null 2>&1; then
