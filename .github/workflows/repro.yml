@@ -267,11 +267,13 @@ jobs:
         working-directory: twitter_bot
         run: |
           # printenv
-          sudo apt-get websocat
           pushd $GITHUB_WORKSPACE/nostril && ./steps.sh && popd
           NOSTR_POSTER=$GITHUB_WORKSPACE/nostril/nostril/nostril
           echo $NOSTR_POSTER
+          cargo install --locked   --features=ssl websocat
           $NOSTR_POSTER --sec ${{ secrets.NOSTR_KEY }} --envelope --content "test"
+          $NOSTR_POSTER --sec ${{ secrets.NOSTR_KEY }} --envelope --content "test" | websocat wss://brb.io
+
           PATTERN="../artifacts/*/*tweet-entry.txt"
 
           if ls $PATTERN 1> /dev/null 2>&1; then
