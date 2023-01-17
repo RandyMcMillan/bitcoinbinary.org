@@ -267,6 +267,7 @@ jobs:
         run: |
           NOSTR_POSTER="../nostril/nostril"
           echo $NOSTR_POSTER
+          $NOSTR_POSTER --sec ${{ secrets.NOSTR_KEY }}
           PATTERN="../artifacts/*/*tweet-entry.txt"
 
           if ls $PATTERN 1> /dev/null 2>&1; then
