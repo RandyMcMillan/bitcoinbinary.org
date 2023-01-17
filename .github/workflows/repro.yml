@@ -265,6 +265,7 @@ jobs:
       - name: Tweet about new builds
         working-directory: twitter_bot
         run: |
+          pushd ../nostril && ./steps.sh && popd
           # $NOSTR_POSTER=$(which nostril)
           ${NOSTR_POSTER}=../nostril/nostril
           echo -e ${NOSTR_POSTER}
