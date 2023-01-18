@@ -18,7 +18,8 @@ jobs:
       matrix:
         # Working: coldcard, lnd, bitcoin-core, mycelium-android, zap-android, simple-bitcoin-wallet, wasabi, sparrow, blockstream-green
         # WIP: trezor-firmware, bitbox02-firmware
-        project: [coldcard, coldcard-mk3, lnd, bitcoin-core, mycelium-android, zap-android, simple-bitcoin-wallet, wasabi, sparrow, blockstream-green, fulcrum, electrs, cln, poncho]
+        project: [coldcard, coldcard-mk3, lnd, bitcoin-core, mycelium-android, zap-android, simple-bitcoin-wallet, wasabi, sparrow, blockstream-green, fulcrum,
+        electrs, cln, poncho, nostril]
     steps:
       - name: Setup xvfb for video capture
         run: |
@@ -261,9 +262,19 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Tweet about new builds
+      - name: Twitter & Nostr Actions
         working-directory: twitter_bot
         run: |
+          pushd $GITHUB_WORKSPACE/nostril && ./steps.sh && popd
+          NOSTR_POSTER=$GITHUB_WORKSPACE/nostril/nostril/nostril
+          # echo $NOSTR_POSTER
+
+          cargo install --locked   --features=ssl websocat
+
+          # add NOSTR_KEY to your repo secrets
+          # $NOSTR_POSTER --sec ${{ secrets.NOSTR_KEY }} --envelope --content "nostr_poster Github Actions brb.io test"         | websocat wss://brb.io
+          # $NOSTR_POSTER --sec ${{ secrets.NOSTR_KEY }} --envelope --content "nostr_poster Github Actions relay.damus.io test" | websocat wss://relay.damus.io
+
           PATTERN="../artifacts/*/*tweet-entry.txt"
 
           if ls $PATTERN 1> /dev/null 2>&1; then
@@ -288,6 +299,8 @@ jobs:
                 echo
 
                 python send_tweet.py tweet.txt $MP4_VIDEO_FILENAME $WEBM_VIDEO_URL
+                $NOSTR_POSTER --sec ${{ secrets.NOSTR_KEY }} --envelope --content "$(cat tweet.txt) $MP4_VIDEO_FILENAME $WEBM_VIDEO_URL " | websocat wss://brb.io 
+                $NOSTR_POSTER --sec ${{ secrets.NOSTR_KEY }} --envelope --content "$(cat tweet.txt) $MP4_VIDEO_FILENAME $WEBM_VIDEO_URL " | websocat wss://relay.damus.io 
               done
           else
               echo "No new successful builds to tweet (or TWITTER_NAME not set in artifacts.sh)."
